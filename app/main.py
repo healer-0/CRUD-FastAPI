@@ -3,6 +3,18 @@ from . import services, schemas
 from .db import engine,SessionLocal
 from .models import Base
 from sqlalchemy.orm import Session
+import sentry_sdk
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+sentry_sdk.init(
+    dsn=os.getenv("SENSENTRY_URL"),
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
 
 
 Base.metadata.create_all(bind=engine)
@@ -16,6 +28,9 @@ def get_db():
     finally:
         db.close()
 
+@app.get("/sentry-debug")
+async def trigger_error():
+    division_by_zero = 1 / 0
 
 @app.get('/books/', response_model=list[schemas.Book])
 def get_all_books(db:Session=Depends(get_db)):
