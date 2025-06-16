@@ -10,7 +10,7 @@ import os
 load_dotenv()
 
 sentry_sdk.init(
-    dsn=os.getenv("SENSENTRY_URL"),
+    dsn=os.getenv("SENTRY_URL"),
     # Add data like request headers and IP for users,
     # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
     send_default_pii=True,
